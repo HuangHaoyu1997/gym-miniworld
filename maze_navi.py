@@ -38,10 +38,10 @@ import matplotlib.pyplot as plt
 'MiniWorld-YMazeLeft-v0', 
 'MiniWorld-YMazeRight-v0'] 
 '''
-env = gym.make('MiniWorld-Maze-v0')
+env = gym.make('MiniWorld-SimToRealPush-v0')
 obs = env.reset()
 done = False
 while done is not True:
     env.render()
     obs,r,done,_ = env.step(env.action_space.sample())
-    print(r)
+    print(env.agent.pos)

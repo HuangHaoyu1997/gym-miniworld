@@ -11,7 +11,7 @@ class RandGen:
 
     def int(self, low, high):
         """
-        Generate random integer in [low,high[
+        Generate random integer in [low,high]
         """
 
         return self.np_random.randint(low, high)
