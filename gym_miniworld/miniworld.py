@@ -673,9 +673,11 @@ class MiniWorldEnv(gym.Env):
             self.move_agent(-fwd_step, fwd_drift)
 
         elif action == self.actions.turn_left:
+            print('turn step,',turn_step)
             self.turn_agent(turn_step)
 
         elif action == self.actions.turn_right:
+            print('turn step,',turn_step)
             self.turn_agent(-turn_step)
 
         # Pick up an object
