@@ -52,6 +52,9 @@ class TestText(gym_miniworld.envs.threerooms.ThreeRooms):
             str='this is a test'
         ))
 env = TestText()
+obs, _, _, _ = env.step(0)
+plt.imshow(obs)
+plt.pause(2)
 
 # Basic collision detection test
 # Make sure the agent can never get outside of the room
@@ -65,7 +68,7 @@ for _ in range(30):
         x, _, z = env.agent.pos
         assert x >= room.min_x and x <= room.max_x
         assert z >= room.min_z and z <= room.max_z
-'''
+
 # Try loading each of the available environments
 for env_id in gym_miniworld.envs.env_ids:
     if 'RemoteBot' in env_id:
@@ -84,4 +87,3 @@ for env_id in gym_miniworld.envs.env_ids:
             obs, reward, done, info = env.step(action)
             if done:
                 env.reset()
-'''
