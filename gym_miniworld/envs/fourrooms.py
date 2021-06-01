@@ -2,7 +2,7 @@ import numpy as np
 import math
 from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
-from ..entity import Ball, Box, Key
+from ..entity import Ball, Barrier, Box, ImageFrame, Key, Office_chair, Office_desk, Potion, TextFrame
 
 class FourRooms(MiniWorldEnv):
     """
@@ -49,12 +49,20 @@ class FourRooms(MiniWorldEnv):
 
         # 放置多个目标
         self.box_red = self.place_entity(Box(color='red'))
-        self.box_blue = self.place_entity(Key(color='blue'))
-        self.box_green = self.place_entity(Ball(color='green'))
+        self.key_blue = self.place_entity(Key(color='blue'))
+        self.ball_green = self.place_entity(Ball(color='green'))
         self.box_purple = self.place_entity(Box(color='purple'))
+        self.box_snow = self.place_entity(Box(color='snow'))
+        self.office_desk = self.place_entity(Office_desk())
+        self.office_chair = self.place_entity(Office_chair())
+        self.barrier = self.place_entity(Barrier())
+        self.potion = self.place_entity(Potion())
+
+        self.img_wall = self.place_entity(TextFrame(pos=[-5,0.5,5],dir=0,str='grass1'),room=0)
+
         print('pos_red,',self.box_red.pos)
 
-        self.place_agent()
+        self.place_agent(room=0)
 
     def step(self, action):
         obs, reward, done, info = super().step(action)

@@ -27,5 +27,10 @@ obs = env.reset()
 done = False
 while done is not True:
     env.render()
+    
+    img = env.render_top_view()
+    # plt.imshow(img)
+    # plt.pause(0.000000001)
+    
     obs,r,done,_ = env.step(env.action_space.sample())
     print(env.agent.pos)

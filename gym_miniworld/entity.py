@@ -11,7 +11,9 @@ COLORS = {
     'blue'  : np.array([0.0, 0.0, 1.0]),
     'purple': np.array([0.44, 0.15, 0.76]),
     'yellow': np.array([1.00, 1.00, 0.00]),
-    'grey'  : np.array([0.39, 0.39, 0.39])
+    'grey'  : np.array([0.39, 0.39, 0.39]),
+    'snow'	: np.array([255., 250., 250.])/255.,
+    'grey'	: np.array([190., 190., 190.])/255.,
 }
 
 # List of color names, sorted alphabetically
@@ -429,6 +431,54 @@ class Ball(MeshEnt):
         assert color in COLOR_NAMES
         super().__init__(
             mesh_name='ball_{}'.format(color),
+            height=size,
+            static=False
+        )
+
+class Office_desk(MeshEnt):
+    """
+    Office Desk
+    """
+
+    def __init__(self, size=1.0):
+        super().__init__(
+            mesh_name='office_desk',
+            height=size,
+            static=False
+        )
+
+class Office_chair(MeshEnt):
+    """
+    Office Chair
+    """
+
+    def __init__(self, size=1.0):
+        super().__init__(
+            mesh_name='office_chair',
+            height=size,
+            static=False
+        )
+
+class Potion(MeshEnt):
+    """
+    Potion饮料
+    """
+
+    def __init__(self, size=0.6):
+        super().__init__(
+            mesh_name='potion',
+            height=size,
+            static=False
+        )
+
+class Barrier(MeshEnt):
+    """
+    Barrier
+    """
+
+    def __init__(self, size=0.8):
+        super().__init__(
+            mesh_name='barrier',
             height=size,
             static=False
         )
