@@ -476,7 +476,7 @@ class Barrier(MeshEnt):
     Barrier
     """
 
-    def __init__(self, size=0.8):
+    def __init__(self, size=1.0):
         super().__init__(
             mesh_name='barrier',
             height=size,
@@ -540,7 +540,7 @@ class Agent(Entity):
             'cam_pitch',
             'cam_fov_y',
         ])
-        #self.radius = params.sample(rng, 'bot_radius')
+        # self.radius = params.sample(rng, 'bot_radius')
 
     def render(self):
         """

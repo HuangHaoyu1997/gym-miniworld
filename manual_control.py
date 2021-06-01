@@ -16,7 +16,7 @@ import gym
 import gym_miniworld
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--env-name', default='MiniWorld-Hallway-v0')
+parser.add_argument('--env-name', default='MiniWorld-FourRooms-v0') # MiniWorld-Hallway-v0
 parser.add_argument('--domain-rand', action='store_true', help='enable domain randomization')
 parser.add_argument('--no-time-limit', action='store_true', help='ignore time step limits')
 parser.add_argument('--top_view', action='store_true', help='show the top view instead of the agent view')

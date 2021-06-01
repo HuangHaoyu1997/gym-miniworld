@@ -148,7 +148,6 @@ class Room:
         max_z=None,
         min_y=0,
         max_y=None
-
     ):
         """
         Create a new portal/opening in a wall of this room
@@ -236,7 +235,7 @@ class Room:
         Generate polygons and static data for this room
         Needed for rendering and collision detection
         Note: the wall polygons are quads, but the floor and
-              ceiling can be arbitrary n-gons
+                ceiling can be arbitrary n-gons
         """
 
         # Load the textures and do texture randomization
