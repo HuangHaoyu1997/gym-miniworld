@@ -44,17 +44,16 @@ assert first_obs.shape == second_obs.shape
 # Test TextFrame
 # make sure it loads the TextFrame with no issues
 class TestText(gym_miniworld.envs.threerooms.ThreeRooms):
-     def _gen_world(self):
-         super()._gen_world()
-         self.entities.append(TextFrame(
-            pos=[0, 1.35, 7],
-            dir=math.pi/2,
-            str='this is a test'
-        ))
+    def _gen_world(self):
+        super()._gen_world()
+        self.entities.append(TextFrame(
+            pos = [0, 1.35, 7],
+            dir = math.pi/2,
+            str = 'this is a test')
+            )
 env = TestText()
-obs, _, _, _ = env.step(0)
-plt.imshow(obs)
-plt.pause(2)
+# env.render()
+# plt.pause(3)
 
 # Basic collision detection test
 # Make sure the agent can never get outside of the room

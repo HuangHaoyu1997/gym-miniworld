@@ -24,11 +24,11 @@ class Maze(MiniWorldEnv):
         self.gap_size = 0.25
 
         super().__init__(
-            max_episode_steps = max_episode_steps or num_rows * num_cols * 24,
+            max_episode_steps = max_episode_steps or num_rows * num_cols * 24, # 8*8*24 = 1536
             **kwargs
         )
 
-        # Allow only the movement actions
+        # Allow only the movement actions, left, right, forward.
         self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):
