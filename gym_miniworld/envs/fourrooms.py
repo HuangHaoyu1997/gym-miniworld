@@ -2,7 +2,7 @@ import numpy as np
 import math
 from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
-from ..entity import Box
+from ..entity import Ball, Box, Key
 
 class FourRooms(MiniWorldEnv):
     """
@@ -12,7 +12,7 @@ class FourRooms(MiniWorldEnv):
 
     def __init__(self, **kwargs):
         super().__init__(
-            max_episode_steps=250,
+            max_episode_steps=2500,
             **kwargs
         )
 
@@ -47,14 +47,19 @@ class FourRooms(MiniWorldEnv):
         self.connect_rooms(room2, room3, min_z=-5, max_z=-3, max_y=2.2)
         self.connect_rooms(room3, room0, min_x=-5, max_x=-3, max_y=2.2)
 
-        self.box = self.place_entity(Box(color='red'))
+        # 放置多个目标
+        self.box_red = self.place_entity(Box(color='red'))
+        self.box_blue = self.place_entity(Key(color='blue'))
+        self.box_green = self.place_entity(Ball(color='green'))
+        self.box_purple = self.place_entity(Box(color='purple'))
+        print('pos_red,',self.box_red.pos)
 
         self.place_agent()
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
-        if self.near(self.box):
+        if self.near(self.box_red):
             reward += self._reward()
             done = True
 
