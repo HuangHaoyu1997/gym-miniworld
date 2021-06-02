@@ -12,7 +12,7 @@ class FourRooms(MiniWorldEnv):
 
     def __init__(self, **kwargs):
         super().__init__(
-            max_episode_steps=2500,
+            max_episode_steps=25000,
             **kwargs
         )
 

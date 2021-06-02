@@ -8,7 +8,7 @@ import gym_miniworld
 from gym_miniworld.wrappers import PyTorchObsWrapper, GreyscaleWrapper
 from gym_miniworld.entity import TextFrame
 import matplotlib.pyplot as plt
-
+import pickle
 
 # print(gym_miniworld.envs.env_ids)
 '''
@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 'MiniWorld-WallGap-v0',        'MiniWorld-YMaze-v0',         'MiniWorld-YMazeLeft-v0', 
 'MiniWorld-YMazeRight-v0'] 
 '''
+EPI_NUM = 10
 
 def look_around(env):
     '''
@@ -31,34 +32,49 @@ def look_around(env):
     s_buffer = []
     r_buffer = []
     done = False
+    agent_pos = env.agent.pos
     for i in range(24):
         obs,r,done,_ = env.step(env.actions.turn_left)
         s_buffer.append(obs)
         r_buffer.append(r)
-    return s_buffer,r_buffer,done
+    return s_buffer,r_buffer,done,agent_pos
 
+def gen_data():
+    env = gym.make('MiniWorld-FourRooms-v0')
+    for epi in range(EPI_NUM):
+        data_set = [] # 收集训练数据，1条数据包括 1)同一位置的24个视角的图像，2)位置坐标
+        obs = env.reset()
+        last_pos = env.agent.pos # 记录坐标
+        obs,r,done,pos = look_around(env) # 环顾四周
 
-env = gym.make('MiniWorld-FourRooms-v0')
-obs = env.reset()
-last_pos = env.agent.pos # 记录坐标
-obs,r,done = look_around(env) # 环顾四周
+        while done is not True:
+            env.render()
+            top_img = env.render_top_view() # 俯视图
+            # plt.imshow(img)
+            # plt.pause(0.000000001)
+            
+            action = env.action_space.sample()
+            obs,r,done,_ = env.step(action)
+            if done: break
+            if action == 2 or action == 3: 
+                # 左右转向(0,1)是原地动作
+                # 前进后退(2,3)改变位置坐标，执行look_around函数
+                obs,r,done,pos = look_around(env)
+                data_set.append([obs,pos])
 
-while done is not True:
-    env.render()
-    top_img = env.render_top_view() # 俯视图
-    # plt.imshow(img)
-    # plt.pause(0.000000001)
-    
-    action = env.action_space.sample()
-    while action == 0 or action == 1:
-        action = env.action_space.sample()
+            agent_dir = env.agent.dir/math.pi*180 # 视角，按度计算
+            delta_x = np.linalg.norm(last_pos-env.agent.pos) # 每一步行进的距离
+            last_pos = env.agent.pos # 更新位置坐标
+            print(len(data_set))
 
-    obs,r,done,_ = env.step(action)
-    if done: break
-    print('pos:',env.agent.pos,'dir:',env.agent.dir/math.pi*180)
-    delta_x = np.linalg.norm(last_pos-env.agent.pos) # 每一步行进的距离
-    last_pos = env.agent.pos
+        with open(str(epi)+'.pkl','wb') as f:
+            pickle.dump(data_set,f)
 
-    if delta_x > 0.1:
-        obs,r,done = look_around(env)
-
+def read_data(dir):
+    with open(dir,'rb') as f:
+        data = pickle.load(f)
+    return data
+if __name__ == "__main__":
+    # gen_data()
+    data = read_data('1.pkl')
+    print(data[50])
