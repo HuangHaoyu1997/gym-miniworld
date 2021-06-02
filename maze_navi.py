@@ -40,8 +40,8 @@ def look_around(env):
 
 env = gym.make('MiniWorld-FourRooms-v0')
 obs = env.reset()
-last_pos = env.agent.pos
-obs,r,done = look_around(env)
+last_pos = env.agent.pos # 记录坐标
+obs,r,done = look_around(env) # 环顾四周
 
 while done is not True:
     env.render()
@@ -49,11 +49,16 @@ while done is not True:
     # plt.imshow(img)
     # plt.pause(0.000000001)
     
-    obs,r,done,_ = env.step(env.action_space.sample())
+    action = env.action_space.sample()
+    while action == 0 or action == 1:
+        action = env.action_space.sample()
+
+    obs,r,done,_ = env.step(action)
+    if done: break
     print('pos:',env.agent.pos,'dir:',env.agent.dir/math.pi*180)
-    delta_x = np.linalg.norm(last_pos-env.agent.pos)
+    delta_x = np.linalg.norm(last_pos-env.agent.pos) # 每一步行进的距离
     last_pos = env.agent.pos
 
     if delta_x > 0.1:
-        look_around(env)
+        obs,r,done = look_around(env)
 
