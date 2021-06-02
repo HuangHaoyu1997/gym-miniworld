@@ -57,24 +57,37 @@ def gen_data():
             obs,r,done,_ = env.step(action)
             if done: break
             if action == 2 or action == 3: 
-                # 左右转向(0,1)是原地动作
+                # 左右转向(0,1)是原地动作，不执行look_around函数
                 # 前进后退(2,3)改变位置坐标，执行look_around函数
                 obs,r,done,pos = look_around(env)
-                data_set.append([obs,pos])
+                delta_x = np.linalg.norm(last_pos - pos) # 每一步行进的距离
+                if delta_x > 0.1: data_set.append([obs,pos]) # 发生位移才收集数据
 
-            agent_dir = env.agent.dir/math.pi*180 # 视角，按度计算
-            delta_x = np.linalg.norm(last_pos-env.agent.pos) # 每一步行进的距离
+            # agent_dir = env.agent.dir/math.pi*180 # 视角，按度计算
             last_pos = env.agent.pos # 更新位置坐标
             print(len(data_set))
 
         with open(str(epi)+'.pkl','wb') as f:
             pickle.dump(data_set,f)
 
-def read_data(dir):
+def process_data(dir):
     with open(dir,'rb') as f:
         data = pickle.load(f)
-    return data
+    
+    img,pos = [],[]
+    for i in range(len(data)):
+        img.append(data[i][0])
+        pos.append(data[i][1])
+    return img,pos
+
 if __name__ == "__main__":
-    # gen_data()
-    data = read_data('1.pkl')
-    print(data[50])
+    gen_data()
+    '''
+    img, pos = process_data('D:/data/1.pkl')
+    print(np.array(img).shape,np.array(pos).shape)
+    pos_ = pos[0]
+    for i in range(len(pos)):
+        delta_x = np.linalg.norm(pos_-pos[i])
+        pos_ = pos[i]
+        print(delta_x)
+    '''
