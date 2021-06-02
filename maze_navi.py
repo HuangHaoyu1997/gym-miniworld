@@ -22,15 +22,38 @@ import matplotlib.pyplot as plt
 'MiniWorld-WallGap-v0',        'MiniWorld-YMaze-v0',         'MiniWorld-YMazeLeft-v0', 
 'MiniWorld-YMazeRight-v0'] 
 '''
+
+def look_around(env):
+    '''
+    环顾360°收集全视角环境图像
+    执行24次turn_left，每次转角15°
+    '''
+    s_buffer = []
+    r_buffer = []
+    done = False
+    for i in range(24):
+        obs,r,done,_ = env.step(env.actions.turn_left)
+        s_buffer.append(obs)
+        r_buffer.append(r)
+    return s_buffer,r_buffer,done
+
+
 env = gym.make('MiniWorld-FourRooms-v0')
 obs = env.reset()
-done = False
+last_pos = env.agent.pos
+obs,r,done = look_around(env)
+
 while done is not True:
     env.render()
-    
-    img = env.render_top_view()
+    top_img = env.render_top_view() # 俯视图
     # plt.imshow(img)
     # plt.pause(0.000000001)
     
     obs,r,done,_ = env.step(env.action_space.sample())
-    print(env.agent.pos)
+    print('pos:',env.agent.pos,'dir:',env.agent.dir/math.pi*180)
+    delta_x = np.linalg.norm(last_pos-env.agent.pos)
+    last_pos = env.agent.pos
+
+    if delta_x > 0.1:
+        look_around(env)
+
