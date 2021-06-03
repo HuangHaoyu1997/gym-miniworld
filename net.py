@@ -8,9 +8,9 @@ import torchvision
 # print(res18(torch.randn(1,3,224,224)).shape)
 
 class retrival_net(nn.Module):
-    def __init__(self):
+    def __init__(self, input_channel=24):
         super(retrival_net,self).__init__()
-        self.net = torchvision.models.resnet18()
+        self.net = torchvision.models.resnet18(input_channel=input_channel)
         self.net1 = torch.nn.Sequential(*(list(self.net.children())[:-1])) # 去掉最后一层mlp
         self.net2 = torch.nn.Sequential(*(list(self.net.children())[:-1])) # 去掉最后一层mlp
 
@@ -33,10 +33,10 @@ class retrival_net(nn.Module):
         return out
 
 class locomotion_net(nn.Module):
-    def __init__(self,action_dim = 4):
+    def __init__(self,action_dim=4, input_channel=24):
         super(locomotion_net,self).__init__()
         self.action_dim = action_dim
-        self.net = torch.nn.Sequential(*(list(torchvision.models.resnet18().children())[:-1]))
+        self.net = torch.nn.Sequential(*(list(torchvision.models.resnet18(input_channel=input_channel).children())[:-1]))
         self.fc = nn.Linear(512, self.action_dim)
     
     def forward(self,x1,x2):
