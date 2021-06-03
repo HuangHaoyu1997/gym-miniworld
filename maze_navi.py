@@ -22,7 +22,7 @@ import pickle
 'MiniWorld-WallGap-v0',        'MiniWorld-YMaze-v0',         'MiniWorld-YMazeLeft-v0', 
 'MiniWorld-YMazeRight-v0'] 
 '''
-EPI_NUM = 10
+EPI_NUM = 2
 
 def look_around(env):
     '''
