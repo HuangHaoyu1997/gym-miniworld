@@ -21,7 +21,7 @@ class retrival_net(nn.Module):
             nn.ReLU(inplace=True),
             nn.Linear(512,512),
             nn.ReLU(inplace=True),
-            nn.Linear(512,512),
+            nn.Linear(512,1),
             nn.ReLU(inplace=True),
         )
 
