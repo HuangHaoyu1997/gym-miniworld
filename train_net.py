@@ -1,5 +1,5 @@
 import numpy as np
-import pickle,random
+import pickle,random,os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -7,18 +7,16 @@ import torchvision
 from net import locomotion_net, retrival_net
 import torch.optim as optim
 
-
-
-
-
 def process_data(dir):
-    with open(dir,'rb') as f:
-        data = pickle.load(f)
-    
     img,pos = [],[]
-    for i in range(len(data)):
-        img.append(data[i][0])
-        pos.append(data[i][1])
+    file_list = os.listdir(dir)
+    for file in file_list:
+        with open(dir+file,'rb') as f:
+            data = pickle.load(f)
+
+        for i in range(len(data)):
+            img.append(data[i][0])
+            pos.append(data[i][1])
     return np.array(img), np.array(pos)
 
 def train(net,img,pos,batch_size=16,lr=1e-3):
@@ -63,13 +61,13 @@ def train(net,img,pos,batch_size=16,lr=1e-3):
     print('Finished Training')
 
 if __name__ == "__main__":
-    dir = '1.pkl'
+    dir = '/home/hhy/navi_py/data/'
     img, pos = process_data(dir)
-    
+    print(img.shape,pos.shape)
     r_net = retrival_net()
-    aa = torch.tensor(img[0:16],dtype=torch.float32).mean(dim=-1)/255.
-    bb = torch.tensor(img[16:32],dtype=torch.float32).mean(dim=-1)/255.
+    # aa = torch.tensor(img[0:16],dtype=torch.float32).mean(dim=-1)/255.
+    # bb = torch.tensor(img[16:32],dtype=torch.float32).mean(dim=-1)/255.
 
-    result = r_net(aa,bb)
+    # result = r_net(aa,bb)
     # print(result.shape)
     train(r_net,img,pos,)
