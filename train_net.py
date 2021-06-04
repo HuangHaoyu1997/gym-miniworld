@@ -7,6 +7,8 @@ import torchvision
 from net import locomotion_net, retrival_net
 import torch.optim as optim
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
+
 def process_data(dir):
     img,pos = [],[]
     file_list = os.listdir(dir)
@@ -19,7 +21,7 @@ def process_data(dir):
             pos.append(data[i][1])
     return np.array(img), np.array(pos)
 
-def train(net,img,pos,batch_size=16,lr=1e-3,epoch=20):
+def train(net,img,pos,device,batch_size=16,lr=1e-3,epoch=20):
     criterion = nn.MSELoss() # nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr, momentum=0.9)
 
@@ -42,8 +44,8 @@ def train(net,img,pos,batch_size=16,lr=1e-3,epoch=20):
             label_batch = np.zeros_like(x_delta)
             label_batch[x_delta<=0.15*6] = 1
 
-            inputs, labels = torch.tensor(data_batch,dtype=torch.float32)/255., \
-                             torch.tensor(label_batch,dtype=torch.float32)
+            inputs, labels = torch.tensor(data_batch,dtype=torch.float32,device=device)/255., \
+                             torch.tensor(label_batch,dtype=torch.float32,device=device)
             optimizer.zero_grad()
             # print(inputs[0])
 
@@ -52,7 +54,7 @@ def train(net,img,pos,batch_size=16,lr=1e-3,epoch=20):
             loss.backward()
             optimizer.step()
 
-            running_loss += loss.item()
+            running_loss += loss.cpu().item()
             if i % 100 == 99:    # print every 100 mini-batches
                 print('[%d, %5d] loss: %.6f' %
                     (epoch + 1, i + 1, running_loss / 100))
@@ -64,7 +66,7 @@ if __name__ == "__main__":
     dir = '/home/hhy/navi_py/data/'
     img, pos = process_data(dir)
     print(img.shape,pos.shape)
-    r_net = retrival_net()
+    r_net = retrival_net().to(device)
     # aa = torch.tensor(img[0:16],dtype=torch.float32).mean(dim=-1)/255.
     # bb = torch.tensor(img[16:32],dtype=torch.float32).mean(dim=-1)/255.
 
