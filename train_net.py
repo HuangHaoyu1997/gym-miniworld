@@ -19,13 +19,13 @@ def process_data(dir):
             pos.append(data[i][1])
     return np.array(img), np.array(pos)
 
-def train(net,img,pos,batch_size=16,lr=1e-3):
+def train(net,img,pos,batch_size=16,lr=1e-3,epoch=20):
     criterion = nn.MSELoss() # nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr, momentum=0.9)
 
     data_num = len(img)
     iter_num = int(data_num / batch_size)
-    for epoch in range(2):  # loop over the dataset multiple times
+    for epoch in range(epoch):  # loop over the dataset multiple times
         running_loss = 0.0
         sample_list_1 = random.sample(list(range(data_num)),data_num)
         sample_list_2 = random.sample(list(range(data_num)),data_num)
@@ -53,9 +53,9 @@ def train(net,img,pos,batch_size=16,lr=1e-3):
             optimizer.step()
 
             running_loss += loss.item()
-            if i % 5 == 4:    # print every 2000 mini-batches
-                print('[%d, %5d] loss: %.3f' %
-                    (epoch + 1, i + 1, running_loss / 5))
+            if i % 100 == 99:    # print every 100 mini-batches
+                print('[%d, %5d] loss: %.6f' %
+                    (epoch + 1, i + 1, running_loss / 100))
                 running_loss = 0.0
 
     print('Finished Training')
