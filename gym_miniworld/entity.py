@@ -366,7 +366,7 @@ class Box(Entity):
     Colored box object
     """
 
-    def __init__(self, color, size=0.8):
+    def __init__(self, color, size=1.0):
         super().__init__()
 
         if type(size) is int or type(size) is float:
@@ -427,7 +427,7 @@ class Ball(MeshEnt):
     Ball (sphere) the agent can pick up and carry
     """
 
-    def __init__(self, color, size=0.6):
+    def __init__(self, color, size=1.0):
         assert color in COLOR_NAMES
         super().__init__(
             mesh_name='ball_{}'.format(color),

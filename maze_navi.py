@@ -22,7 +22,7 @@ import pickle
 'MiniWorld-WallGap-v0',        'MiniWorld-YMaze-v0',         'MiniWorld-YMazeLeft-v0', 
 'MiniWorld-YMazeRight-v0'] 
 '''
-EPI_NUM = 50
+EPI_NUM = 1
 
 def look_around(env):
     '''
@@ -33,11 +33,18 @@ def look_around(env):
     r_buffer = []
     done = False
     agent_pos = env.agent.pos
+    agent_dir = []
+
     for i in range(24):
         obs,r,done,_ = env.step(env.actions.turn_left)
         s_buffer.append(obs)
         r_buffer.append(r)
-    return s_buffer,r_buffer,done,agent_pos
+        agent_dir.append((env.agent.dir*180./math.pi)%360.)
+    agent_dir = np.array(agent_dir)
+    index = agent_dir.argsort() # 固定视角顺序，从0°-360°
+    s_buffer = np.array(s_buffer)[index] # 按顺序调整img
+
+    return s_buffer,r_buffer,done,agent_pos,agent_dir
 
 def gen_data():
     env = gym.make('MiniWorld-FourRooms-v0')
@@ -45,10 +52,11 @@ def gen_data():
         data_set = [] # 收集训练数据，1条数据包括 1)同一位置的24个视角的图像，2)位置坐标
         obs = env.reset()
         last_pos = env.agent.pos # 记录坐标
-        obs,r,done,pos = look_around(env) # 环顾四周
-
+        obs,r,done,pos,dir = look_around(env) # 环顾四周
+        
+        
         while done is not True:
-            # env.render()
+            env.render()
             # top_img = env.render_top_view() # 俯视图
             # plt.imshow(img)
             # plt.pause(0.000000001)
@@ -59,16 +67,26 @@ def gen_data():
             if action == 2 or action == 3: 
                 # 左右转向(0,1)是原地动作，不执行look_around函数
                 # 前进后退(2,3)改变位置坐标，执行look_around函数
-                obs,r,done,pos = look_around(env)
+                obs,r,done,pos,dir = look_around(env)
                 delta_x = np.linalg.norm(last_pos - pos) # 每一步行进的距离
                 if delta_x > 0.1: data_set.append([obs,pos]) # 发生位移才收集数据
+                '''
+                index = dir.argsort()
+                for i in range(24):
+                    plt.subplot(4,6,i+1)
+                    idx = index[i]
+                    plt.imshow(np.array(obs)[idx,:])
+                plt.pause(2)
+                '''
 
             # agent_dir = env.agent.dir/math.pi*180 # 视角，按度计算
             last_pos = env.agent.pos # 更新位置坐标
-            print(len(data_set))
 
-        with open(str(epi)+'.pkl','wb') as f:
-            pickle.dump(data_set,f)
+            if len(data_set) % 1000 == 0:
+                print(len(data_set))
+                with open(str(epi)+'.pkl','wb') as f:
+                    pickle.dump(data_set,f)
+        
 
 def process_data(dir):
     with open(dir,'rb') as f:

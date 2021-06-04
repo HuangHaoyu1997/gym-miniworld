@@ -7,7 +7,9 @@ import torchvision
 from net import locomotion_net, retrival_net
 import torch.optim as optim
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
+os.environ['CUDA_VISIBLE_DEVICES']='5,6,7'
+print('free GPU ID:',torch.cuda.device_count())
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
 
 def process_data(dir):
     img,pos = [],[]
@@ -21,9 +23,10 @@ def process_data(dir):
             pos.append(data[i][1])
     return np.array(img), np.array(pos)
 
-def train(net,img,pos,device,batch_size=16,lr=1e-3,epoch=20):
+def train(net,img,pos,device,batch_size=64,lr=1e-4,epoch=100):
     criterion = nn.MSELoss() # nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr, momentum=0.9)
+    # optimizer = optim.SGD(net.parameters(), lr, momentum=0.9)
+    optimizer = optim.Adam(net.parameters(), lr, betas=(0.9,0.999),eps=1e-8)
 
     data_num = len(img)
     iter_num = int(data_num / batch_size)
