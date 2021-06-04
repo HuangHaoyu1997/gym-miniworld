@@ -22,7 +22,7 @@ import pickle
 'MiniWorld-WallGap-v0',        'MiniWorld-YMaze-v0',         'MiniWorld-YMazeLeft-v0', 
 'MiniWorld-YMazeRight-v0'] 
 '''
-EPI_NUM = 2
+EPI_NUM = 50
 
 def look_around(env):
     '''
@@ -48,8 +48,8 @@ def gen_data():
         obs,r,done,pos = look_around(env) # 环顾四周
 
         while done is not True:
-            env.render()
-            top_img = env.render_top_view() # 俯视图
+            # env.render()
+            # top_img = env.render_top_view() # 俯视图
             # plt.imshow(img)
             # plt.pause(0.000000001)
             
