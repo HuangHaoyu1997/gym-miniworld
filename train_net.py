@@ -28,7 +28,7 @@ def train(net,img,pos,device,batch_size=16,lr=1e-3,epoch=20):
     data_num = len(img)
     iter_num = int(data_num / batch_size)
     for epoch in range(epoch):  # loop over the dataset multiple times
-        running_loss = 0.0
+        epoch_loss = 0.0
         sample_list_1 = random.sample(list(range(data_num)),data_num)
         sample_list_2 = random.sample(list(range(data_num)),data_num)
         for i in range(iter_num):
@@ -54,11 +54,11 @@ def train(net,img,pos,device,batch_size=16,lr=1e-3,epoch=20):
             loss.backward()
             optimizer.step()
 
-            running_loss += loss.cpu().item()
-            if i % 100 == 99:    # print every 100 mini-batches
-                print('[%d, %5d] loss: %.6f' %
-                    (epoch + 1, i + 1, running_loss / 100))
-                running_loss = 0.0
+            epoch_loss += loss.cpu().item()
+            # if i % 100 == 99:    # print every 100 mini-batches
+            #     print('[%d, %5d] loss: %.6f' % (epoch + 1, i + 1, epoch_loss / 100))
+            #     epoch_loss = 0.0
+        print(epoch, epoch_loss/iter_num)
 
     print('Finished Training')
 
@@ -72,4 +72,4 @@ if __name__ == "__main__":
 
     # result = r_net(aa,bb)
     # print(result.shape)
-    train(r_net,img,pos,)
+    train(r_net,img,pos,device)
