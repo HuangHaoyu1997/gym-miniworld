@@ -46,7 +46,7 @@ def look_around(env):
 
     return s_buffer,r_buffer,done,agent_pos,agent_dir
 
-def gen_data():
+def gen_data(render=False):
     env = gym.make('MiniWorld-FourRooms-v0')
     for epi in range(EPI_NUM):
         data_set = [] # 收集训练数据，1条数据包括 1)同一位置的24个视角的图像，2)位置坐标
@@ -56,7 +56,7 @@ def gen_data():
         
         
         while done is not True:
-            env.render()
+            if render: env.render()
             # top_img = env.render_top_view() # 俯视图
             # plt.imshow(img)
             # plt.pause(0.000000001)
