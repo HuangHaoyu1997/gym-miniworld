@@ -99,7 +99,7 @@ def process_data(dir):
     return img,pos
 
 if __name__ == "__main__":
-    gen_data()
+    gen_data(True)
     '''
     img, pos = process_data('D:/data/1.pkl')
     print(np.array(img).shape,np.array(pos).shape)
